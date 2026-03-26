@@ -56,6 +56,7 @@ const productController = {
         `));
     },
 
+    
     // Crear en BD
     async createProduct(req, res) {
         await Product.create(req.body);
@@ -66,7 +67,28 @@ const productController = {
     async deleteProduct(req, res) {
         await Product.findByIdAndDelete(req.params.productId);
         res.redirect('/dashboard');
-    }
+    },
+
+    async showEditProduct(req, res) {
+    const product = await Product.findById(req.params.productId);
+    res.send(baseHtml(`
+        <h1>Editar Producto</h1>
+        <form action="/dashboard/${product._id}?_method=PUT" method="POST">
+            <input name="name" value="${product.name}" required>
+            <textarea name="description">${product.description}</textarea>
+            <input name="image" value="${product.image}">
+            <input type="number" name="price" value="${product.price}">
+            <button type="submit">Actualizar Producto</button>
+        </form>
+    `));
+},
+
+
+async updateProduct(req, res) {
+    await Product.findByIdAndUpdate(req.params.productId, req.body);
+    res.redirect('/dashboard');
+}
+
 };
 
 module.exports = productController;

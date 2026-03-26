@@ -7,5 +7,7 @@ router.get('/dashboard', productController.showDashboard);
 router.get('/dashboard/new', productController.showNewProduct);
 router.post('/dashboard', productController.createProduct);
 router.delete('/dashboard/:productId/delete', productController.deleteProduct);
+router.get('/dashboard/:productId/edit', productController.showEditProduct);
+router.put('/dashboard/:productId', productController.updateProduct);
 
 module.exports = router;

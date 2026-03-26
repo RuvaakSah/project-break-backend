@@ -12,7 +12,7 @@ const ProductSchema = new mongoose.Schema({
     size: { 
         type: String, 
         required: true,
-        enum: ['XS', 'S', 'M', 'L', 'XL', 'Puta Gorda'] 
+        enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
     },
     price: { type: Number, required: true }
 }, { timestamps: true });
