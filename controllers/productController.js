@@ -105,6 +105,37 @@ async showEditProduct(req, res) {
     }
 },
 
+async showProductById(req, res) {
+    try {
+        const p = await Product.findById(req.params.productId);
+        
+        // Miramos si la URL contiene "dashboard" para saber qué botones poner
+        const isAdmin = req.url.includes('dashboard');
+        
+        const adminButtons = isAdmin ? `
+            <div style="margin-top: 20px;">
+                <a href="/dashboard/${p._id}/edit" style="background:orange; padding:10px; color:white; text-decoration:none;">✏️ Editar</a>
+                <form action="/dashboard/${p._id}/delete?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" style="background:red; color:white; padding:10px; border:none; cursor:pointer;">🗑️ Borrar</button>
+                </form>
+            </div>
+        ` : `<a href="/products">⬅️ Volver al catálogo</a>`;
+
+        res.send(baseHtml(`
+            <h1>Detalle: ${p.name}</h1>
+            <img src="${p.image}" width="300">
+            <p><strong>Descripción:</strong> ${p.description}</p>
+            <p><strong>Precio:</strong> ${p.price}€</p>
+            <p><strong>Talla:</strong> ${p.size}</p>
+            <p><strong>Categoría:</strong> ${p.category}</p>
+            ${adminButtons}
+            ${isAdmin ? '<br><br><a href="/dashboard">⬅️ Volver al Dashboard</a>' : ''}
+        `));
+    } catch (error) {
+        res.status(404).send(baseHtml('<h1>Producto no encontrado</h1>'));
+    }
+},
+
 
 async updateProduct(req, res) {
     await Product.findByIdAndUpdate(req.params.productId, req.body);
