@@ -10,7 +10,7 @@ const productController = {
                 <img src="${p.image}" alt="${p.name}">
                 <h3>${p.name}</h3>
                 <p>${p.price}€</p>
-                <a href="/products/${p._id}">Ver detalle</a>
+                <a href="/dashboard/${p._id}">Ver detalle</a>
             </div>
         `).join('');
         res.send(baseHtml(`<h1>Catálogo</h1><div class="container">${cards}</div>`));
