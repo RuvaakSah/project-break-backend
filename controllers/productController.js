@@ -69,18 +69,40 @@ const productController = {
         res.redirect('/dashboard');
     },
 
-    async showEditProduct(req, res) {
-    const product = await Product.findById(req.params.productId);
-    res.send(baseHtml(`
-        <h1>Editar Producto</h1>
-        <form action="/dashboard/${product._id}?_method=PUT" method="POST">
-            <input name="name" value="${product.name}" required>
-            <textarea name="description">${product.description}</textarea>
-            <input name="image" value="${product.image}">
-            <input type="number" name="price" value="${product.price}">
-            <button type="submit">Actualizar Producto</button>
-        </form>
-    `));
+    // La función dentro del objeto productController
+async showEditProduct(req, res) {
+    try {
+        // Buscamos el producto por el ID que viene en la URL
+        const product = await Product.findById(req.params.productId);
+        
+        if (!product) {
+            return res.status(404).send(baseHtml('<h1>Producto no encontrado</h1>'));
+        }
+
+        // Pintamos el formulario con los datos cargados
+        res.send(baseHtml(`
+            <h1>Editar: ${product.name}</h1>
+            <form action="/dashboard/${product._id}?_method=PUT" method="POST">
+                <label>Nombre:</label>
+                <input name="name" value="${product.name}" required>
+                
+                <label>Precio:</label>
+                <input type="number" name="price" value="${product.price}" required>
+                
+                <label>Imagen (URL):</label>
+                <input name="image" value="${product.image}" required>
+                
+                <label>Descripción:</label>
+                <textarea name="description" required>${product.description}</textarea>
+                
+                <button type="submit">Actualizar Producto</button>
+            </form>
+            <br>
+            <a href="/dashboard">Volver al Dashboard</a>
+        `));
+    } catch (error) {
+        res.status(500).send(baseHtml('<h1>Error al cargar el formulario</h1>'));
+    }
 },
 
 
